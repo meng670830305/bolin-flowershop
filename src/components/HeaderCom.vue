@@ -1,22 +1,22 @@
 <template>
-    <div>
-        <el-row>
+  <div>
+    <el-row>
       <el-col :span="24">
         <ul>
-          <li>
-            <el-link :underline="false">登录</el-link>
+          <li v-if="store.state.NickName == undefined" @click="OpenLogin">
+            <el-link :underline="false">ログイン</el-link>
           </li>
-          <li>
-            <el-link :underline="false">注册</el-link>
+          <li v-if="store.state.NickName == undefined" @click="OpenRegister">
+            <el-link :underline="false">サインアップ</el-link>
           </li>
-          <li>
-            <el-link :underline="false">张三</el-link>
+          <li v-if="store.state.NickName != undefined"> 
+            <el-link :underline="false">{{store.state.NickName}}</el-link>
           </li>
-          <li>
-            <el-link :underline="false" href="/personcenter">个人中心</el-link>
+          <li v-if="store.state.NickName != undefined">
+            <el-link :underline="false" href="/personcenter">マイページ</el-link>
           </li>
-          <li>
-            <el-link :underline="false">注销</el-link>
+          <li v-if="store.state.NickName != undefined" @click="LogOut">
+            <el-link :underline="false">ログアウト</el-link>
           </li>
         </ul>
       </el-col>
@@ -36,9 +36,8 @@
           class="w-50 m-2"
           style="margin-top: 30px"
           size="large"
-          placeholder="キーワード検索"
+          placeholder="商品搜索"
           :suffix-icon="Search"
-          @change="Change"
         />
       </el-col>
       <el-col :span="8">
@@ -50,19 +49,39 @@
         </div>
       </el-col>
     </el-row>
-    </div>
+    <el-row>
+      <el-col :span="18">
+        <el-menu :default-active="activeIndex" class="el-menu-header" mode="horizontal" router>
+          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/loveflower">爱情鲜花</el-menu-item>
+          <el-menu-item index="/birthdayflower">生日鲜花</el-menu-item>
+          <el-menu-item index="/friendflower">友情鲜花</el-menu-item>
+          <el-menu-item index="/weddingflower">婚庆鲜花</el-menu-item>
+        </el-menu>
+      </el-col>
+    </el-row>
+  </div>
+  <LoginCom />
+  <RegisterCom />
 </template>
-
-<script lang="ts" setup>
-import { ElMessage } from 'element-plus';
-import { ref ,onMounted} from 'vue';
-const SearchInput = ref("");
-
-const Change = ()=>{
-    ElMessage('検索キーワードは:' + SearchInput.value)
+<script setup>
+import LoginCom from "./LoginCom.vue";
+import RegisterCom from "./RegisterCom.vue";
+import { useStore } from 'vuex'
+const store = useStore()
+const OpenLogin = () => {
+  store.commit('OpenLogin')
+}
+const OpenRegister = () => {
+  store.commit('OpenRegister')
+}
+const LogOut=()=>{
+  //清理vuex状态 //清理localStorage
+  localStorage.removeItem('NickName');
+  localStorage.removeItem('token');
+  store.commit('SettingNickName', undefined)
 }
 </script>
-
 <style lang="scss">
 ul {
   list-style: none;
