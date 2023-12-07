@@ -73,12 +73,12 @@ const Submit = async () => {
             message: '注册成功！',
             type: 'success',
         })
-        // let user = JSON.parse(FormatToken(res.result))
+        let user = JSON.parse(FormatToken(res.result))
         localStorage["token"] = res.result;
         //设置全局变量的值
-        store.commit('SettingNickName', res.result)
+        store.commit('SettingNickName', user.NickName)
         //设置localStorage，保证页面刷新后vuex的值可以从里面读，避免刷新后状态丢失
-        localStorage["NickName"] = res.result
+        localStorage["NickName"] = user.NickName
         //登录成功后隐藏登录框
         store.commit('CloseRegister')
     } else {

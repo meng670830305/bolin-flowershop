@@ -23,7 +23,7 @@ import { computed, ref, onMounted } from "vue";
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { getToken } from "@/http";
-import { oriVaildImages, guid } from '../global/index'
+import { oriVaildImages, guid, FormatToken } from '../global/index'
 const vaildImages = ref(oriVaildImages.value);
 let ValidateKey = "";
 //组件加载事件
@@ -64,12 +64,12 @@ const Submit = async () => {
       message: '登录成功！',
       type: 'success',
     })
-    // let user = JSON.parse(FormatToken(res.result))
+   let user = JSON.parse(FormatToken(res.result))
     localStorage["token"] = res.result;
     //设置全局变量的值
-    store.commit('SettingNickName', res.result)
+    store.commit('SettingNickName', user.NickName)
     //设置localStorage，保证页面刷新后vuex的值可以从里面读，避免刷新后状态丢失
-    localStorage["NickName"] = res.result
+    localStorage["NickName"] = user.NickName
     //登录成功后隐藏登录框
     store.commit('CloseLogin')
   } else {
